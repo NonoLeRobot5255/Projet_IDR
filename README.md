@@ -2,7 +2,7 @@
 
 ## algo 1 (BallTree)
 
-Pour les différentes limites de PIR on à :
+Pour les différentes limites de PIR on a :
 
 | limite du PIR | Nombre de clusters |
 | :-----------: | :----------------: |

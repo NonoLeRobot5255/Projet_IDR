@@ -1,57 +1,43 @@
 import pandas as pd
-import haversine as ha
 import numpy as np
+from sklearn.neighbors import BallTree
 
-#on import le CSV et on le met sous forme de DB pandas
-donnees = pd.read_csv("generated.csv", delimiter=",")
+# Lecture du CSV
+dtype_dict = {
+    'LAT': np.float32,
+    'LON': np.float32
+}
+donnees = pd.read_csv("generated.csv", delimiter=",", dtype=dtype_dict)
 
-#on rajoute des colonnes pour nos 3 données suplémentaires
-donnees['nb_voisins'] = 0
-donnees['cluster'] = 0
-donnees['VID'] = [[] for d in range(len(donnees))]
-#le nombre de données qu'on traite
-traitement = 1000
+# Initialisation des colonnes
+donnees['nb_voisins'] = np.zeros(len(donnees), dtype=np.int32)
+donnees['cluster'] = np.zeros(len(donnees), dtype=np.int32)
+donnees['VID'] = [[] for _ in range(len(donnees))]
 
-#on calcul ici toutes les distances et les potentiels voisins
-for i in range (traitement):
-    for j in range (i+1,traitement):
+# Calcul des voisins avec BallTree
+coords = np.radians(donnees[['LAT', 'LON']].values.astype(np.float32))
+tree = BallTree(coords, metric='haversine', leaf_size=40)
+radius = 45 / 6371.0
 
-        #on calcule la distance entre les deux points
-        dist = ha.haversine(
-        (donnees.loc[i, 'LAT'], donnees.loc[i, 'LON']), 
-        (donnees.loc[j, 'LAT'], donnees.loc[j, 'LON']),
-        )
-        
-        #si on est dans le cercle de 90km de diamètre, on ews théoriquement tous les deux dans un cluster
-        if dist < 45:
-            donnees.loc[i,'nb_voisins'] += 1
-            donnees.loc[i,'VID'].append(j)
-            donnees.loc[j,'nb_voisins'] +=1
-            donnees.loc[j,'VID'].append(i)
+indices = tree.query_radius(coords, r=radius)
+donnees['nb_voisins'] = np.array([len(neighs) - 1 for neighs in indices], dtype=np.int32)
+donnees['VID'] = [list(neighs[neighs != i]) for i, neighs in enumerate(indices)]
 
-
-
-
-#numéro du premier cluster
+# Assignation des clusters
 n = 1
-
-#on trie par nombres de voisins potentiels 
+cluster_map = np.zeros(len(donnees), dtype=np.int32)
 sorted_indices = donnees['nb_voisins'].sort_values(ascending=False).index
 
-
-#on assigne ici les clusters
 for index in sorted_indices:
-    if donnees.at[index, 'cluster'] == 0:
-        donnees.at[index, 'cluster'] = n
+    if cluster_map[index] == 0:
+        cluster_map[index] = n
         voisins = donnees.at[index, 'VID']
-        for i in voisins:
-            donnees.at[i, 'cluster'] = n
+        cluster_map[voisins] = n
         n += 1
-        
-donnees = donnees.sort_values(by=['nb_voisins'], ascending=False)
 
-#on affiche les données
-print(donnees) 
+donnees['cluster'] = cluster_map
 
-#on affiche tout dans un autre csv nommé "res.csv"
-donnees.to_csv("res.csv", sep=',')
+
+
+# Export des résultats
+donnees.to_csv("res.csv", sep=',', index=False)

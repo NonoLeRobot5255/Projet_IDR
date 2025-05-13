@@ -15,12 +15,11 @@ Pour un temps d'exécution moyen de 3.3s sur 10 exécutions.
 ### 
 
 On a une complexité pour chaque aspect de :
+ | Étape                  | Complexité               |
+ |------------------------|--------------------------|
+ | Chargement des données | $O(n)$                   |
+ | Ball Tree              | $O(n \log(n))$           |
+ | Recherche de voisins   | $O(m n \log(n))$         |
+ | Assignement des clusters| $O(n \log(n) + n k)$     |
 
-| étape  | complexité |
-| :-----------: | :----------------: |
-| chargement des données         | $$ O(n)$$           |
-| Ball Tree         | $$ O(n\ log(n))$$             |
-| reecherche de voisins        | $$ O(m\ n\ log(n))$$             |
-| assignemetn des clusters        | $$ O( n\ log(n) + n \ k)$$             |
-
-Pour une complexité globale en$$O(n\ log(n) + n \ k \ log(k))$$
+Pour une complexité globale en $O(n \log(n) + n k \log(k))$

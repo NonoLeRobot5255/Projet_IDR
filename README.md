@@ -6,20 +6,12 @@ Pour les différentes limites de PIR on a :
 
 | Limite du PIR | Nombre de clusters |
 | :-----------: | :----------------: |
-| 1Gb/s         | 25 365             |
-| 2Gb/s         | 20 059             |
-| 4Gb/s         | 18 781             |
+| 1Gb/s         | 26 198             |
+| 2Gb/s         | 21 302             |
+| 4Gb/s         | 20 298             |
 
-Pour un temps d'exécution moyen de 3.3s sur 10 exécutions.
+Pour un temps d'exécution moyen de 8.056s sur 10 exécutions.
 
 ### 
 
-On a une complexité pour chaque aspect de :
- | Étape                  | Complexité               |
- |------------------------|--------------------------|
- | Chargement des données | $O(n)$                   |
- | Ball Tree              | $O(n \log(n))$           |
- | Recherche de voisins   | $O(m n \log(n))$         |
- | Assignement des clusters| $O(n \log(n) + n k)$     |
-
-Pour une complexité globale en $O(n \log(n) + n k \log(k))$
+complexité globale en $O(n \log(n))$

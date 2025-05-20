@@ -1,3 +1,4 @@
+import sys
 import numpy as np
 import pandas as pd
 from sklearn.cluster import DBSCAN
@@ -16,8 +17,15 @@ dtype_dict = {
     'LON': np.float32,
     'PIR': np.float32
 }
+
+if len(sys.argv) != 2:
+    print("Usage: python balltree.py <max_pir_per_cluster>")
+    print("Utilisation de la valeur 4000 par défaut\n\n")
+    MAX_PIR = 4000.0
+else : 
+    MAX_PIR = float(sys.argv[1])
+
 RADIUS_KM = 45
-MAX_PIR = 2000.0
 EPS = RADIUS_KM / 6371.0
 
 df = pd.read_csv('generated.csv', dtype=dtype_dict)

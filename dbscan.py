@@ -4,6 +4,10 @@ from sklearn.cluster import DBSCAN
 from sklearn.metrics.pairwise import haversine_distances
 import time
 
+print("\n\n\n###################################################################")
+print("#                     Clustering avec DBscan                      #")
+print("################################################################### \n\n\n")
+
 
 # Read the CSV with the same dtype as in balltree.py
 # LAT, LON, PIR columns
@@ -101,4 +105,7 @@ result.to_csv('res.csv', index=False)
 num_clusters = len(set(new_labels))
 print(f"Number of clusters: {num_clusters}")
 
+print("\n\n\n###################################################################")
+print("#                       fin du clustering                         #")
+print("################################################################### \n\n\n")
 

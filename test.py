@@ -174,6 +174,13 @@ violations = {
     "pir": [cid for cid, info in cluster_info.items() if info['pir_total'] >= MAX_PIR_TOTAL and info['points_count'] > 1]
 }
 
+# Calculate and print average radius of clusters
+if num_clusters > 0:
+    avg_radius = np.mean([info['radius'] for info in cluster_info.values()])
+    print(f"- Average cluster radius: {avg_radius:.2f} km")
+else:
+    print("- Average cluster radius: N/A (no clusters found)")
+
 print(f"- Maximum allowed radius: {MAX_RADIUS_KM} km")
 if violations["radius"]:
     print(f"  ❌ {len(violations['radius'])} clusters exceed the maximum radius")
